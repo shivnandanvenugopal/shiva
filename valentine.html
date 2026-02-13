@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Wife ❤️</title>
+    <style>
+        :root {
+            --primary-red: #ff4d4d;
+            --soft-pink: #fff0f0;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background-color: white; /* Base color */
+        }
+
+        /* PERSISTENT HEART BACKGROUND */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind everything */
+            pointer-events: none;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: var(--primary-red);
+            font-size: 20px;
+            opacity: 0.6;
+            animation: floatUp 7s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* PAGE STRUCTURE */
+        .page {
+            display: none;
+            position: relative;
+            z-index: 10; /* Above the hearts */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+            text-align: center;
+        }
+
+        .active { display: flex; }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 85%;
+        }
+
+        /* FLASHCARDS */
+        .slider-box {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .flashcard img {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .flashcard p { font-style: italic; margin-top: 15px; color: #333; }
+
+        .card-active { display: flex; transform: translateX(0); opacity: 1; }
+        .card-exit { display: flex; transform: translateX(-150%) rotate(-20deg); opacity: 0; }
+        .card-entry { display: flex; transform: translateX(150%) rotate(20deg); opacity: 0; }
+
+        /* BUTTONS & INPUTS */
+        .btn-main {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+            transition: 0.3s;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ffebeb;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #no-btn { position: absolute; transition: 0.1s ease-out; }
+    </style>
+</head>
+<body>
+
+    <div id="bg-canvas"></div>
+
+    <div id="page1" class="page active">
+        <button class="btn-main" style="font-size: 2rem;" onclick="showPage(2)">START</button>
+    </div>
+
+    <div id="page2" class="page">
+        <div class="glass-container" style="background: rgba(255, 220, 220, 0.9);">
+            <h2 style="color: var(--primary-red);">Login</h2>
+            <input type="text" id="user" placeholder="Username">
+            <input type="password" id="pass" placeholder="Password">
+            <button class="btn-main" onclick="checkLogin()">Login</button>
+        </div>
+    </div>
+
+    <div id="page3" class="page">
+        <div class="slider-box">
+            <div class="flashcard card-active" id="c0"><img src="pic1.jpg"><p>The first of many beautiful moments.</p></div>
+            <div class="flashcard card-entry" id="c1"><img src="pic2.jpg"><p>Glowing different when its her.</p></div>
+            <div class="flashcard card-entry" id="c2"><img src="pic3.jpg"><p>Our first kiss...miles away from home.</p></div>
+            <div class="flashcard card-entry" id="c3"><img src="pic4.jpg"><p>My autistic GF...</p></div>
+            <div class="flashcard card-entry" id="c4"><img src="pic5.jpg"><p>My fav beach memory...With my fav person.</p></div>
+        </div>
+        <button class="btn-main" onclick="nextCard()">Next Memory</button>
+    </div>
+
+    <div id="page4" class="page">
+        <div class="glass-container">
+            <h2 id="q-title">Do You Know Me?</h2>
+            <div id="quiz-area">
+                <p id="q-text" style="font-size: 1.2rem; font-weight: bold;"></p>
+                <input type="text" id="q-input" placeholder="Your answer...">
+                <br>
+                <button class="btn-main" onclick="handleQuiz()">Next</button>
+            </div>
+            <div id="quiz-retry" style="display:none;">
+                <p style="color: var(--primary-red); font-size: 1.2rem;">Try again my love ❤️</p>
+                <button class="btn-main" onclick="resetQuiz()">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page5" class="page">
+        <div style="font-size: 5rem;">🌹</div>
+        <h1 style="color: var(--primary-red); margin: 20px;">Will you be my valentine?</h1>
+        <div style="position: relative; width: 300px; height: 100px;">
+            <button class="btn-main" style="width: 120px;" onclick="showPage(6)">YES</button>
+            <button id="no-btn" class="btn-main" style="width: 80px; background: #888; font-size: 1rem;">No</button>
+        </div>
+    </div>
+
+    <div id="page6" class="page">
+        <h1 style="color: var(--primary-red);">You are already my wife</h1>
+        <div style="font-size: 4rem; margin: 20px;">🌹🌹🌹🌹🌹</div>
+        <p style="font-size: 1.4rem; padding: 0 20px;">Our 3rd valentines day together...<br><b>And i'd choose you every time.</b></p>
+    </div>
+
+    <script>
+        // 1. GENERATE HEARTS (Always running)
+        const bg = document.getElementById('bg-canvas');
+        function createHeart() {
+            const h = document.createElement('div');
+            h.className = 'floating-heart';
+            h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            h.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            bg.appendChild(h);
+            setTimeout(() => h.remove(), 7000);
+        }
+        setInterval(createHeart, 300);
+
+        // 2. NAVIGATION
+        function showPage(n) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page' + n).classList.add('active');
+        }
+
+        // 3. LOGIN
+        function checkLogin() {
+            const u = document.getElementById('user').value.toLowerCase();
+            const p = document.getElementById('pass').value;
+            if(u === 'nunu monkey' && p === 'ilymonkey') {
+                showPage(3);
+            } else {
+                alert("Incorrect login, try again my love!");
+            }
+        }
+
+        // 4. SLIDING CARDS
+        let cardIdx = 0;
+        function nextCard() {
+            const current = document.getElementById('c' + cardIdx);
+            current.classList.replace('card-active', 'card-exit');
+            
+            cardIdx++;
+            if(cardIdx < 5) {
+                const next = document.getElementById('c' + cardIdx);
+                next.classList.replace('card-entry', 'card-active');
+            } else {
+                showPage(4);
+                startQuiz();
+            }
+        }
+
+        // 5. QUIZ LOGIC
+        const questions = [
+            {q: "My fav car?", a: "bmw"},
+            {q: "My fav word which you use?", a: "ano"},
+            {q: "The place we kissed first?", a: "stairs"},
+            {q: "Sport i play most?", a: "football"},
+            {q: "The person i love most?", a: "ridika"}
+        ];
+        let qIdx = 0;
+        let score = 0;
+
+        function startQuiz() {
+            qIdx = 0; score = 0;
+            document.getElementById('quiz-area').style.display = 'block';
+            document.getElementById('quiz-retry').style.display = 'none';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            document.getElementById('q-text').innerText = questions[qIdx].q;
+            document.getElementById('q-input').value = "";
+        }
+
+        function handleQuiz() {
+            const ans = document.getElementById('q-input').value.trim().toLowerCase();
+            if(ans === questions[qIdx].a) score++;
+            
+            qIdx++;
+            if(qIdx < questions.length) {
+                showQuestion();
+            } else {
+                if(score >= 3) showPage(5);
+                else {
+                    document.getElementById('quiz-area').style.display = 'none';
+                    document.getElementById('quiz-retry').style.display = 'block';
+                }
+            }
+        }
+
+        function resetQuiz() { startQuiz(); }
+
+        // 6. RUNAWAY NO BUTTON
+        const noBtn = document.getElementById('no-btn');
+        noBtn.addEventListener('mouseover', () => {
+            const maxX = window.innerWidth - 100;
+            const maxY = window.innerHeight - 50;
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
+        });
+    </script>
+</body>
+</html>
